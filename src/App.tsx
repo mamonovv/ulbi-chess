@@ -10,10 +10,10 @@ import Timer from "./components/Timer";
 const App = () => {
 
     const [board, setBoard] = useState(new Board())
-    const [whitePlayer] = useState(new Player(Colors.WHITE))
-    const [blackPlayer] = useState(new Player(Colors.BLACK))
+    const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE))
+    const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK))
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null)
-    const [gameWinner, setGameWinner] = useState('')
+    const [winner, setWinner] = useState('')
 
     useEffect(() => {
         restart()
@@ -25,7 +25,12 @@ const App = () => {
         newBoard.initCells()
         newBoard.addFigures()
         setBoard(newBoard)
-        setGameWinner('')
+
+        const whitePlayer = new Player(Colors.WHITE)
+        setWhitePlayer(whitePlayer)
+        setCurrentPlayer(whitePlayer)
+
+        setWinner('')
     }
 
     function swapPlayer() {
@@ -34,15 +39,15 @@ const App = () => {
 
     return (
         <div className={'app'}>
-            {gameWinner &&
+            {winner &&
                 <div className={'winner'}>
                     <div className={'winner-banner'}>
-                        {gameWinner} wins!
+                        {winner} wins!
                         <button onClick={restart}>Restart</button>
                     </div>
                 </div>
             }
-            <Timer currentPlayer={currentPlayer} restart={restart}/>
+            <Timer currentPlayer={currentPlayer} restart={restart} setWinner={setWinner}/>
             <BoardComponent board={board} setBoard={setBoard} currentPlayer={currentPlayer} swapPlayer={swapPlayer}/>
             <div>
                 <LostFigures title={'Black Figures'} figures={board.lostBlackFigures}/>
