@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import {Player} from "../models/Player";
 import {Colors} from "../models/Colors";
 
@@ -6,17 +6,27 @@ interface TimerProps {
     currentPlayer: Player | null
     restart: () => void
     setWinner: (winner: string) => void
+    blackTime: number
+    whiteTime: number
+    setBlackTime: React.Dispatch<React.SetStateAction<number>>
+    setWhiteTime: React.Dispatch<React.SetStateAction<number>>
 }
 
-const Timer: FC<TimerProps> = ({currentPlayer, restart, setWinner}) => {
+export const DEFAULT_TIMER = 5
 
-    const [blackTime, setBlackTime] = useState(300)
-    const [whiteTime, setWhiteTime] = useState(300)
+const Timer: FC<TimerProps> = ({
+                                   currentPlayer,
+                                   restart,
+                                   setWinner,
+                                   setBlackTime,
+                                   setWhiteTime,
+                                   whiteTime,
+                                   blackTime
+                               }) => {
 
     const timer = useRef<null | ReturnType<typeof setInterval>>(null)
 
     useEffect(() => {
-        resetTime()
         startTimer()
     }, [currentPlayer])
 
@@ -50,7 +60,7 @@ const Timer: FC<TimerProps> = ({currentPlayer, restart, setWinner}) => {
         setWhiteTime(prev => prev - 1)
     }
 
-    function resetTime(time = 300) {
+    function resetTime(time = DEFAULT_TIMER) {
         setWhiteTime(time)
         setBlackTime(time)
     }
@@ -65,8 +75,8 @@ const Timer: FC<TimerProps> = ({currentPlayer, restart, setWinner}) => {
             <div>
                 <button onClick={handleRestart}>Restart game</button>
             </div>
-            <h2>Черные - {blackTime}</h2>
-            <h2>Черные - {whiteTime}</h2>
+            <h2>Black - {blackTime}</h2>
+            <h2>White - {whiteTime}</h2>
         </div>
     );
 };
